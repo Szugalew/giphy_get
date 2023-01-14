@@ -2,11 +2,11 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:giphy_get/giphy_get.dart';
 import 'package:giphy_get/l10n.dart';
 import 'package:giphy_get_demo/providers/theme_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,10 +16,9 @@ Future<void> main() async {
     await dotenv.load();
   }
 
-  runApp(MultiProvider(providers: [
-    ChangeNotifierProvider(
-        create: (ctx) => ThemeProvider(currentTheme: ThemeMode.system))
-  ], child: const MyApp()));
+  runApp(MultiProvider(
+      providers: [ChangeNotifierProvider(create: (ctx) => ThemeProvider(currentTheme: ThemeMode.system))],
+      child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -129,11 +128,9 @@ class _MyHomePageState extends State<MyHomePage> {
                     children: [
                       const Expanded(child: Text("Dark Mode")),
                       Switch(
-                          value:
-                              Theme.of(context).brightness == Brightness.dark,
+                          value: Theme.of(context).brightness == Brightness.dark,
                           onChanged: (value) {
-                            themeProvider.setCurrentTheme(
-                                value ? ThemeMode.dark : ThemeMode.light);
+                            themeProvider.setCurrentTheme(value ? ThemeMode.dark : ThemeMode.light);
                           })
                     ],
                   ),
@@ -152,7 +149,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       ? SizedBox(
                           child: GiphyGifWidget(
                             imageAlignment: Alignment.center,
-                            gif: currentGif,
+                            gif: currentGif.images.fixedWidthStill,
                             giphyGetWrapper: giphyGetWrapper,
                             borderRadius: BorderRadius.circular(30),
                             showGiphyLabel: true,
@@ -173,8 +170,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   );
                 },
                 tooltip: 'Open Sticker',
-                child: const Icon(Icons
-                    .insert_emoticon)), // This trailing comma makes auto-formatting nicer for build methods.
+                child: const Icon(
+                    Icons.insert_emoticon)), // This trailing comma makes auto-formatting nicer for build methods.
           );
         });
   }

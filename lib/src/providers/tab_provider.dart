@@ -6,6 +6,8 @@ class TabProvider with ChangeNotifier {
   String apiKey;
   Color? tabColor;
   String? searchText;
+  String stickersLabel;
+  String gifsLabel;
   String rating = GiphyRating.g;
   String lang = GiphyLanguage.english;
   String randomID = "";
@@ -21,6 +23,8 @@ class TabProvider with ChangeNotifier {
     required this.apiKey,
     this.tabColor,
     this.searchText,
+    this.stickersLabel = "Stickers",
+    this.gifsLabel = "Gifs",
     required this.rating,
     required this.randomID,
     required this.lang,

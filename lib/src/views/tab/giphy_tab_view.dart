@@ -25,16 +25,16 @@ class GiphyTabView extends StatelessWidget {
     return TabBarView(
       controller: tabController,
       children: [
+        if (showStickers)
+          GiphyTabDetail(
+            type: GiphyType.stickers,
+            scrollController: scrollController,
+          ),
         if (showGIFs)
           GiphyTabDetail(
             type: GiphyType.gifs,
             scrollController: scrollController,
             key: null,
-          ),
-        if (showStickers)
-          GiphyTabDetail(
-            type: GiphyType.stickers,
-            scrollController: scrollController,
           ),
         if (showEmojis)
           GiphyTabDetail(

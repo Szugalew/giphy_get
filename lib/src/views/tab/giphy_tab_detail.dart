@@ -12,8 +12,8 @@ import 'package:provider/provider.dart';
 class GiphyTabDetail extends StatefulWidget {
   final String type;
   final ScrollController scrollController;
-  GiphyTabDetail({Key? key, required this.type, required this.scrollController})
-      : super(key: key);
+
+  GiphyTabDetail({Key? key, required this.type, required this.scrollController}) : super(key: key);
 
   @override
   _GiphyTabDetailState createState() => _GiphyTabDetailState();
@@ -93,8 +93,7 @@ class _GiphyTabDetailState extends State<GiphyTabDetail> {
     _crossAxisCount = (MediaQuery.of(context).size.width / _gifWidth).round();
 
     // Set vertical max items count
-    int _mainAxisCount =
-        ((MediaQuery.of(context).size.height - 30) / _gifWidth).round();
+    int _mainAxisCount = ((MediaQuery.of(context).size.height - 30) / _gifWidth).round();
 
     _limit = _crossAxisCount * _mainAxisCount;
 
@@ -141,55 +140,66 @@ class _GiphyTabDetailState extends State<GiphyTabDetail> {
   }
 
   Widget _item(GiphyGif gif) {
-    double _aspectRatio = (double.parse(gif.images!.fixedWidth.width) /
-        double.parse(gif.images!.fixedWidth.height));
+    double _aspectRatio = (double.parse(gif.images!.fixedWidth.width) / double.parse(gif.images!.fixedWidth.height));
 
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(10.0),
+    return Material(
+      borderRadius: BorderRadius.circular(16.0),
       child: InkWell(
         onTap: () => _selectedGif(gif),
-        child: gif.images == null || gif.images?.fixedWidth.webp == null
+        borderRadius: BorderRadius.circular(16.0),
+        child: gif.images == null || gif.images?.fixedWidthStill?.url == null
             ? Container()
-            : ExtendedImage.network(
-                gif.images!.fixedWidth.webp!,
-                cache: true,
-                gaplessPlayback: true,
-                fit: BoxFit.fill,
-                headers: {'accept': 'image/*'},
-                loadStateChanged: (state) => AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 350),
-                  child: gif.images == null
-                      ? Container()
-                      : case2(
-                          state.extendedImageLoadState,
-                          {
-                            LoadState.loading: AspectRatio(
-                              aspectRatio: _aspectRatio,
-                              child: Container(
-                                color: Theme.of(context).cardColor,
-                              ),
-                            ),
-                            LoadState.completed: AspectRatio(
-                              aspectRatio: _aspectRatio,
-                              child: ExtendedRawImage(
-                                fit: BoxFit.fill,
-                                image: state.extendedImageInfo?.image,
-                              ),
-                            ),
-                            LoadState.failed: AspectRatio(
-                              aspectRatio: _aspectRatio,
-                              child: Container(
-                                color: Theme.of(context).cardColor,
-                              ),
-                            ),
-                          },
-                          AspectRatio(
-                            aspectRatio: _aspectRatio,
-                            child: Container(
-                              color: Theme.of(context).cardColor,
-                            ),
-                          ),
+            : AspectRatio(
+                aspectRatio: double.parse(gif.images!.fixedWidthStill!.width) /
+                    double.parse(gif.images!.fixedWidthStill!.height),
+                child: Ink(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(16),
+                    image: DecorationImage(
+                      image: ExtendedImage.network(
+                        gif.images!.fixedWidthStill!.url,
+                        cache: true,
+                        gaplessPlayback: true,
+                        fit: BoxFit.fill,
+                        headers: {'accept': 'image/*'},
+                        loadStateChanged: (state) => AnimatedSwitcher(
+                          duration: const Duration(milliseconds: 350),
+                          child: gif.images == null
+                              ? Container()
+                              : case2(
+                                  state.extendedImageLoadState,
+                                  {
+                                    LoadState.loading: AspectRatio(
+                                      aspectRatio: _aspectRatio,
+                                      child: Container(
+                                        color: Theme.of(context).cardColor,
+                                      ),
+                                    ),
+                                    LoadState.completed: AspectRatio(
+                                      aspectRatio: _aspectRatio,
+                                      child: ExtendedRawImage(
+                                        fit: BoxFit.fill,
+                                        image: state.extendedImageInfo?.image,
+                                      ),
+                                    ),
+                                    LoadState.failed: AspectRatio(
+                                      aspectRatio: _aspectRatio,
+                                      child: Container(
+                                        color: Theme.of(context).cardColor,
+                                      ),
+                                    ),
+                                  },
+                                  AspectRatio(
+                                    aspectRatio: _aspectRatio,
+                                    child: Container(
+                                      color: Theme.of(context).cardColor,
+                                    ),
+                                  ),
+                                ),
                         ),
+                      ).image,
+                    ),
+                  ),
                 ),
               ),
       ),
@@ -207,8 +217,7 @@ class _GiphyTabDetailState extends State<GiphyTabDetail> {
     _isLoading = true;
 
     // Giphy Client from library
-    GiphyClient client = GiphyClient(
-        apiKey: _tabProvider.apiKey, randomId: _tabProvider.randomID);
+    GiphyClient client = GiphyClient(apiKey: _tabProvider.apiKey, randomId: _tabProvider.randomID);
 
     // Offset pagination for query
     if (_collection == null) {
@@ -224,18 +233,10 @@ class _GiphyTabDetailState extends State<GiphyTabDetail> {
       // If query text is not null search gif else trendings
       if (_appBarProvider.queryText.isNotEmpty) {
         _collection = await client.search(_appBarProvider.queryText,
-            lang: _tabProvider.lang,
-            offset: offset,
-            rating: _tabProvider.rating,
-            type: widget.type,
-            limit: _limit);
+            lang: _tabProvider.lang, offset: offset, rating: _tabProvider.rating, type: widget.type, limit: _limit);
       } else {
         _collection = await client.trending(
-            lang: _tabProvider.lang,
-            offset: offset,
-            rating: _tabProvider.rating,
-            type: widget.type,
-            limit: _limit);
+            lang: _tabProvider.lang, offset: offset, rating: _tabProvider.rating, type: widget.type, limit: _limit);
       }
     }
 
@@ -251,8 +252,7 @@ class _GiphyTabDetailState extends State<GiphyTabDetail> {
 
   // Scroll listener. if scroll end load more gifs
   void _scrollListener() {
-    if (widget.scrollController.positions.last.extentAfter.lessThan(500) &&
-        !_isLoading) {
+    if (widget.scrollController.positions.last.extentAfter.lessThan(500) && !_isLoading) {
       _loadMore();
     }
   }

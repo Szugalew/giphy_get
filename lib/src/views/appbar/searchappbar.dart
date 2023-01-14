@@ -43,8 +43,8 @@ class _SearchAppBarState extends State<SearchAppBar> {
     _focus.addListener(_focusListener);
 
     //Set Texfield Controller
-    _textEditingController = new TextEditingController(
-        text: Provider.of<AppBarProvider>(context, listen: false).queryText);
+    _textEditingController =
+        new TextEditingController(text: Provider.of<AppBarProvider>(context, listen: false).queryText);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       // Establish the debouncer
@@ -103,25 +103,23 @@ class _SearchAppBarState extends State<SearchAppBar> {
         _tabProvider.tabType == GiphyType.emoji
             ? Container()
             : SizedBox(
-                height: 40,
+                height: 50,
                 child: Center(
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10),
                     child: TextField(
                       textAlignVertical: TextAlignVertical.center,
-                      autofocus: _sheetProvider.initialExtent ==
-                          SheetProvider.maxExtent,
+                      autofocus: _sheetProvider.initialExtent == SheetProvider.maxExtent,
                       focusNode: _focus,
                       controller: _textEditingController,
                       decoration: InputDecoration(
                         filled: true,
                         prefixIcon: _searchIcon(),
-                        hintText: l.searchInputLabel,
+                        hintText: Provider.of<TabProvider>(context).searchText,
                         suffixIcon: IconButton(
                             icon: Icon(
                               Icons.clear,
-                              color:
-                                  Theme.of(context).textTheme.bodyText1!.color!,
+                              color: Theme.of(context).textTheme.bodyText1!.color!,
                             ),
                             onPressed: () {
                               setState(() {
@@ -169,8 +167,7 @@ class _SearchAppBarState extends State<SearchAppBar> {
 
   void _focusListener() {
     // Set to max extent height if Textfield has focus
-    if (_focus.hasFocus &&
-        _sheetProvider.initialExtent == SheetProvider.minExtent) {
+    if (_focus.hasFocus && _sheetProvider.initialExtent == SheetProvider.minExtent) {
       _sheetProvider.initialExtent = SheetProvider.maxExtent;
     }
   }

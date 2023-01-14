@@ -7,7 +7,7 @@ import 'package:giphy_get/l10n.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class GiphyGifWidget extends StatefulWidget {
-  final GiphyGif gif;
+  final GiphyStillImage gif;
   final GiphyGetWrapper giphyGetWrapper;
   final bool showGiphyLabel;
   final BorderRadius? borderRadius;
@@ -61,14 +61,14 @@ class _GiphyGifWidgetState extends State<GiphyGifWidget> {
                   });
                 },
                 child: Container(
-                  width: double.parse(widget.gif.images!.fixedWidth.width),
-                  height: double.parse(widget.gif.images!.fixedWidth.height),
+                  width: double.parse(widget.gif.width),
+                  height: double.parse(widget.gif.height),
                   clipBehavior: Clip.hardEdge,
                   decoration: BoxDecoration(
                     borderRadius: widget.borderRadius,
                   ),
                   child: ExtendedImage.network(
-                    widget.gif.images!.fixedWidth.url,
+                    widget.gif.url,
                   ),
                 ),
               ),
@@ -97,7 +97,7 @@ class _GiphyGifWidgetState extends State<GiphyGifWidget> {
                   children: [
                     TextButton(
                         onPressed: () {
-                          launchUrl(Uri.parse(widget.gif.url!));
+                          launchUrl(Uri.parse(widget.gif.url));
                         },
                         child: Text(
                           l.viewOnGiphy,
@@ -110,18 +110,6 @@ class _GiphyGifWidgetState extends State<GiphyGifWidget> {
                         thickness: 1,
                       ),
                     ),
-                    TextButton(
-                      onPressed: () {
-                        widget.giphyGetWrapper.getGif(
-                          '@${widget.gif.username}',
-                          context,
-                        );
-                      },
-                      child: Text(
-                        '${l.moreBy} @${widget.gif.username}',
-                        style: buttonsTextStyle,
-                      ),
-                    )
                   ],
                 ),
               ),

@@ -58,12 +58,12 @@ class _GiphyTabBarState extends State<GiphyTabBar> {
     // Set TabList
     final l = GiphyGetUILocalizations.labelsOf(context);
     _tabs = [
-      if (widget.showGIFs)
-        TabWithType(tab: Tab(text: l.gifsLabel), type: GiphyType.gifs),
       if (widget.showStickers)
-        TabWithType(tab: Tab(text: l.stickersLabel), type: GiphyType.stickers),
-      if (widget.showEmojis)
-        TabWithType(tab: Tab(text: l.emojisLabel), type: GiphyType.emoji),
+        TabWithType(
+            tab: Tab(text: Provider.of<TabProvider>(context, listen: false).stickersLabel), type: GiphyType.stickers),
+      if (widget.showGIFs)
+        TabWithType(tab: Tab(text: Provider.of<TabProvider>(context, listen: false).gifsLabel), type: GiphyType.gifs),
+      if (widget.showEmojis) TabWithType(tab: Tab(text: l.emojisLabel), type: GiphyType.emoji),
     ];
 
     super.didChangeDependencies();
@@ -83,11 +83,8 @@ class _GiphyTabBarState extends State<GiphyTabBar> {
     if (_tabs.length == 1) return SizedBox();
 
     return TabBar(
-      unselectedLabelColor: Theme.of(context).brightness == Brightness.light
-          ? Colors.black54
-          : Colors.white54,
-      labelColor:
-          _tabProvider.tabColor ?? Theme.of(context).colorScheme.secondary,
+      unselectedLabelColor: Theme.of(context).brightness == Brightness.light ? Colors.black54 : Colors.white54,
+      labelColor: _tabProvider.tabColor ?? Theme.of(context).colorScheme.secondary,
       indicatorColor: Colors.transparent,
       indicatorSize: TabBarIndicatorSize.label,
       controller: widget.tabController,
