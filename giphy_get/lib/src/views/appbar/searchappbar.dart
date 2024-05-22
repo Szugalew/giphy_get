@@ -119,7 +119,7 @@ class _SearchAppBarState extends State<SearchAppBar> {
                         suffixIcon: IconButton(
                             icon: Icon(
                               Icons.clear,
-                              color: Theme.of(context).textTheme.bodyText1!.color!,
+                              color: Theme.of(context).textTheme.bodyLarge!.color!,
                             ),
                             onPressed: () {
                               setState(() {
